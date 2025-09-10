@@ -16,22 +16,18 @@ export const verifyToken = async (req, res, next) => {
     });
   }
 
-  try {
-    const decoded = jwt.verify(token, SECRET);
-
-    const user = await User.findByPk(decoded.id);
-    if (!user || user.tokenVersion !== decoded.tokenVersion) {
-      return res.status(403).json({ status: false, data: [], message: "403 Forbidden - Token invalid or replaced" });
+  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+    if (err) {
+      if (err.name === "TokenExpiredError") {
+        return res.status(401).json({ message: "Session expired, please log in again" });
+      }
+      return res.status(403).json({ message: "Invalid token" });
     }
 
-    req.user = user;
+    req.user = decoded;
     next();
-  } catch (err) {
-    console.log(err);
-    return res.status(403).json({ status: false, data: [], message: "403 Forbidden - Token expired or invalid" });
-  }
+  });
 };
-
 export default {
   verifyToken
 };

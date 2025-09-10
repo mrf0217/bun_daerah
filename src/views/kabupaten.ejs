@@ -44,8 +44,8 @@
                     return;
                 }
 
-                const json = await response.json();
-                if(json.status) {
+                const data = await response.json();
+                if(data.status) {
                     dataPre.textContent = JSON.stringify(data.data, null, 2);
                 } else {
                     dataPre.textContent = data.message || 'Failed to fetch data';

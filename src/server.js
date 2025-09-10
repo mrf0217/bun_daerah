@@ -24,9 +24,9 @@ app.get('/login', (req, res) => res.render('login'));
 app.get('/register', (req, res) => res.render('register'));
 
 //protected frontend pages
-app.get('wilayah', authMiddleware.verifyToken, (req, res) => res.render('wilayah'));
-app.get('/wilayah/provinsi', authMiddleware.verifyToken, (req, res) => res.render('provinsi'));
-app.get('/wilayah/kabupaten', authMiddleware.verifyToken, (req, res) => res.render('kabupaten'));
+app.get('/wilayah',  (req, res) => res.render('wilayah'));
+app.get('/wilayah/provinsi',  (req, res) => res.render('provinsi'));
+app.get('/wilayah/kabupaten',  (req, res) => res.render('kabupaten'));
 
 
 // Protected routes (require token)

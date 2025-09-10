@@ -50,7 +50,7 @@ export const login = async (req, res) => {
     user.tokenVersion += 1;
     await user.save();
 
-    const token = jwt.sign({ id: user.id, username: user.username, tokenVersion: user.tokenVersion }, SECRET, { expiresIn: "120s" });
+    const token = jwt.sign({ id: user.id, username: user.username, tokenVersion: user.tokenVersion }, SECRET, { expiresIn: "1h" });
 
     res.json({
       status: true,

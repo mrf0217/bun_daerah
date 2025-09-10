@@ -21,6 +21,7 @@
         const goLogin = document.getElementById('goLogin');
 
         goLogin.onclick = () => {
+            localStorage.removeItem('token');
             window.location.href = '/login';
         };
 

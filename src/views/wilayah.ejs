@@ -32,15 +32,25 @@
             window.location.href = '/login';
         };
 
+        window.onload = () => {
+            const token = localStorage.getItem('token');
+                if (!token) {
+                    window.location.href = '/login';
+                }
+};
+
+        
+
         async function fetchWilayah() {
             const token = localStorage.getItem('token');
             if(!token) {
+                localStorage.removeItem('token');
                 window.location.href = '/login';
                 return;
             }
 
             try {
-                const response = await fetch('/api/wilayah/provinsi', {
+                const response = await fetch('/api/wilayah', {
                     headers: { Authorization: `Bearer ` + token }
                 });
 
@@ -51,7 +61,7 @@
                 }
 
                 const data = await response.json();
-                if(json.status) {
+                if(data.status) {
                     dataPre.textContent = JSON.stringify(data.data, null, 2);
                 } else {
                     dataPre.textContent = data.message || 'Failed to fetch data';
@@ -61,7 +71,7 @@
             }
         }
 
-        fetchWilayah()
+        fetchWilayah();
         </script>;
     
 </body>
