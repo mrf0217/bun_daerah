@@ -97,3 +97,10 @@ export const getByWilayah = async (req, res) => {
     });
   }
 };
+
+export default {
+  getAll,
+  getProvinsi,
+  getKabupaten,
+  getByWilayah
+};
