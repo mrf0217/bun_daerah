@@ -2,9 +2,9 @@
   "name": "src",
   "version": "1.0.0",
   "type": "module",              
-  "main": "bun_daerah",       
+  "main": "bun_daerah/src/server.js",       
   "scripts": {
-    "start": "bun bun_daerah",
+    "start": "bun bun_daerah/src/server.js",
     "dev": "bun src/server.js"
   },
   "dependencies": {
