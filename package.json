@@ -1,0 +1,18 @@
+{
+  "name": "src",
+  "version": "1.0.0",
+  "type": "module",              
+  "main": "bun_daerah",       
+  "scripts": {
+    "start": "bun bun_daerah",
+    "dev": "bun src/server.js"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "dotenv": "^17.2.2",
+    "express": "^4.19.0",
+    "jsonwebtoken": "^9.0.2",
+    "mysql2": "^3.9.0",
+    "sequelize": "^6.37.0"
+  }
+}
