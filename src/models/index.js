@@ -13,7 +13,7 @@ const sequelize = new Sequelize(
   }
 );
 
-import userModel from './userModel.js';
+import userModel from './userModels.js';
 import provinsiModel from './provinsiModel.js';
 import kabupatenModel from './kabupatenModel.js';
 

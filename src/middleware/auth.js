@@ -31,3 +31,7 @@ export const verifyToken = async (req, res, next) => {
     return res.status(403).json({ status: false, data: [], message: "403 Forbidden - Token expired or invalid" });
   }
 };
+
+export default {
+  verifyToken
+};
