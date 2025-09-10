@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+    <title>Wilayah Data</title>
+</head>
+<body>
+    <h1>Wilayah Data</h1>
+    <button id="btnProvinsi">go to Provinces</button>
+    <button id="btnKabupaten">go to Regencies</button>
+    <button id="btnLogout">Logout</button>
+
+    <pre id="data"></pre>
+
+    <script>
+        const dataPre = document.getElementById('data');
+        const btnProvinsi = document.getElementById('btnProvinsi');
+        const btnKabupaten = document.getElementById('btnKabupaten');
+        const btnLogout = document.getElementById('btnLogout');
+
+        btnProvinsi.onclick = () => {
+            window.location.href = '/wilayah/provinsi';
+        };
+
+        btnKabupaten.onclick = () => {
+            window.location.href = '/wilayah/kabupaten';
+        };
+
+        btnLogout.onclick = () => {
+            localStorage.removeItem('token');
+            window.location.href = '/login';
+        };
+
+        async function fetchWilayah() {
+            const token = localStorage.getItem('token');
+            if(!token) {
+                window.location.href = '/login';
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/wilayah/provinsi', {
+                    headers: { Authorization: `Bearer ` + token }
+                });
+
+                if(response.status ===401 || response.status === 403) {
+                    localStorage.removeItem('token');
+                    window.location.href = '/login';
+                    return;
+                }
+
+                const data = await response.json();
+                if(json.status) {
+                    dataPre.textContent = JSON.stringify(data.data, null, 2);
+                } else {
+                    dataPre.textContent = data.message || 'Failed to fetch data';
+                }
+            } catch (error) {
+                dataPre.textContent = 'An error occurred. Please try again.' + error.message;
+            }
+        }
+
+        fetchWilayah()
+        </script>;
+    
+</body>
+</html>
