@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+    <title>Register</title>
+</head>
+<body>
+    <h1>Register</h1>
+    <form id="registerForm">
+        <label for="Username">Username: <input type="text" id="username" required></label><br>
+        <label for="Password">Password: <input type="password" id="password" required></label><br>
+        <button type="submit">Register</button>
+    </form>
+    <p id="message"></p>
+    <p>Already have an account? <button id="goLogin">Login here</button></p>
+
+    <script>
+        const form = document.getElementById('registerForm');
+        const message = document.getElementById('message');
+        const goLogin = document.getElementById('goLogin');
+
+        goLogin.onclick = () => {
+            localStorage.removeItem('token');
+            window.location.href = '/login';
+        };
+
+        form.onsubmit = async (e) => {
+            e.preventDefault();
+            message.textContent = '';
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const response = await fetch('/auth/register', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ username, password })
+                });
+
+                const data = await response.json();
+                if(res.ok && data.status) {
+                    message.style.color = 'green';
+                    message.textContent = 'Registration successful! Redirecting to login...';
+                    
+                } else {
+                    message.style.color = 'red';
+                    message.textContent = data.message || 'Registration failed';
+                }
+            }catch (error) {
+                message.style.color = 'red';
+                message.textContent = 'An error occurred. Please try again.' + error.message;
+            }
+        };
+        </script>
+    
+</body>
+</html>

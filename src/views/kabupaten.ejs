@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+    <title>Kabupaten Data</title>
+</head>
+<body>
+    <h1>Kabupaten Data</h1>
+    <button id="btnBack">Back to Wilayah</button>
+    <button id="btnLogout">Logout</button>
+
+    <pre id="data"></pre>
+
+    <script>
+        const dataPre = document.getElementById('data');
+        const btnBack = document.getElementById('btnBack');
+        const btnLogout = document.getElementById('btnLogout');
+
+        btnBack.onclick = () => {
+            window.location.href = '/wilayah';
+        };
+
+        btnLogout.onclick = () => {
+            localStorage.removeItem('token');
+            window.location.href = '/login';
+        };
+
+        async function fetchKabupaten() {
+            const token = localStorage.getItem('token');
+            if(!token) {
+                window.location.href = '/login';
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/wilayah/kabupaten', {
+                    headers: { Authorization: `Bearer ` + token }
+                });
+
+                if(response.status ===401 || response.status === 403) {
+                    localStorage.removeItem('token');
+                    window.location.href = '/login';
+                    return;
+                }
+
+                const data = await response.json();
+                if(data.status) {
+                    dataPre.textContent = JSON.stringify(data.data, null, 2);
+                } else {
+                    dataPre.textContent = data.message || 'Failed to fetch data';
+                }
+            } catch (error) {
+                dataPre.textContent = 'An error occurred. Please try again.' + error.message;
+            }
+        }
+
+        fetchKabupaten();
+    </script>
+</body>
+</html>
