@@ -1,23 +1,28 @@
-import dotenv from 'dotenv';
-dotenv.config()
-import express from 'express';
-import path from 'path';
-import { fileURLToPath } from 'url';
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-import wilayahRoutes from './routes/wilayahRoutes.js';
-import authRoutes from './routes/authRoutes.js';
-import authMiddleware from './middleware/auth.js';
-import { sequelize } from './models/index.js';
 
-const app = express();
+ import express from 'express';
+ import path from 'path';
+ import { fileURLToPath } from 'url';
+ const __filename = fileURLToPath(import.meta.url);
+ const __dirname = path.dirname(__filename);
+import cookieParser from 'cookie-parser';
+ import wilayahRoutes from './routes/wilayahRoutes.js';
+ import authRoutes from './routes/authRoutes.js';
+ import commentRoutes from './routes/commentRoutes.js';
+ import authMiddleware from './middleware/auth.js';
+ import { sequelize } from './models/index.js';
+import { connectRedis } from './utils/redisClient.js';
 
-app.use(express.json());
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
+ const app = express();
 
-// Public routes
-app.use('/auth', authRoutes);
+ app.use(express.json());
+app.use(cookieParser());
+ app.set('views', path.join(__dirname, 'views'));
+ app.set('view engine', 'ejs');
+
+ // Public routes
+ app.use('/auth', authRoutes);
+ app.use('/api/comments', commentRoutes);
+ 
 //serve frontend pages
 app.get('/', (req, res) => res.redirect('/login'));
 app.get('/login', (req, res) => res.render('login'));
@@ -50,3 +55,5 @@ app.listen(PORT, () => {
 sequelize.authenticate()
   .then(() => console.log('DB connected'))
   .catch(err => console.error('DB connection error:', err));
+// Connect to Redis in the background
+connectRedis().catch((err) => console.error('Redis connection error:', err));

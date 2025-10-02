@@ -1,7 +1,10 @@
 // controllers/wilayahController.js
 import { Provinsi, Kabupaten } from '../models/index.js';
+import { logApiAccess, logApiStart } from '../utils/apiLogger.js';
 
 export const getAll = async (req, res) => {
+  logApiStart(req);
+  
   try {
     const provinsi = await Provinsi.findAll({ 
       attributes: ['wilayah', 'nama_provinsi'] 
@@ -12,89 +15,152 @@ export const getAll = async (req, res) => {
     include: { model: Provinsi, attributes: ['wilayah', 'nama_provinsi']  }
     });
 
-    res.json({
+    const responseData = {
       status: true,
       data: { provinsi, kabupaten },
       message: "OK"
+    };
+
+    res.json(responseData);
+    
+    // Log successful access to database
+    await logApiAccess(req, res, { 
+      provinsiCount: provinsi.length, 
+      kabupatenCount: kabupaten.length 
     });
+    
   } catch (err) {
-    console.log(err)
-    res.status(500).json({
+    console.log(err);
+    const errorResponse = {
       status: false,
       data: [],
       message: `500 Internal Server Error: ${err.message}`
-    });
+    };
+    
+    res.status(500).json(errorResponse);
+    
+    // Log error to database
+    await logApiAccess(req, res, null, err);
   }
 };
 
 export const getProvinsi = async (req, res) => {
+  logApiStart(req);
+  
   try {
     const data = await Provinsi.findAll(); // 
-    res.json({
+    const responseData = {
       status: true,
       data,
       message: "OK"
-    });
+    };
+    
+    res.json(responseData);
+    
+    // Log successful access to database
+    await logApiAccess(req, res, { provinsiCount: data.length });
+    
   } catch (err) {
-    res.status(500).json({
+    const errorResponse = {
       status: false,
       data: [],
       message: `500 Internal Server Error: ${err.message}`
-    });
+    };
+    
+    res.status(500).json(errorResponse);
+    
+    // Log error to database
+    await logApiAccess(req, res, null, err);
   }
 };
 
 export const getKabupaten = async (req, res) => {
+  logApiStart(req);
+  
   try {
     const data = await Kabupaten.findAll({ include: Provinsi }); 
-    res.json({
+    const responseData = {
       status: true,
       data,
       message: "OK"
-    });
+    };
+    
+    res.json(responseData);
+    
+    // Log successful access to database
+    await logApiAccess(req, res, { kabupatenCount: data.length });
+    
   } catch (err) {
-    res.status(500).json({
+    const errorResponse = {
       status: false,
       data: [],
       message: `500 Internal Server Error: ${err.message}`
-    });
+    };
+    
+    res.status(500).json(errorResponse);
+    
+    // Log error to database
+    await logApiAccess(req, res, null, err);
   }
 };
 
 export const getByWilayah = async (req, res) => {
-  try {
-    const { wilayah } = req.params;
+  logApiStart(req);
+  const { wilayah } = req.params;
 
-    
+  try {
     const provinsi = await Provinsi.findByPk(wilayah, { include: Kabupaten });
     if (provinsi) {
-      return res.json({
+      const responseData = {
         status: true,
         data: provinsi,
         message: "OK"
-      });
+      };
+      
+      res.json(responseData);
+      
+      // Log successful access to database
+      await logApiAccess(req, res, { foundType: 'provinsi', wilayah });
+      return;
     }
 
     const kabupaten = await Kabupaten.findByPk(wilayah, { include: Provinsi });
     if (kabupaten) {
-      return res.json({
+      const responseData = {
         status: true,
         data: kabupaten,
         message: "OK"
-      });
+      };
+      
+      res.json(responseData);
+      
+      // Log successful access to database
+      await logApiAccess(req, res, { foundType: 'kabupaten', wilayah });
+      return;
     }
 
-    res.status(404).json({
+    const notFoundResponse = {
       status: false,
       data: [],
       message: "404 Not Found"
-    });
+    };
+    
+    res.status(404).json(notFoundResponse);
+    
+    // Log not found to database
+    await logApiAccess(req, res, { foundType: 'none', wilayah });
+    
   } catch (err) {
-    res.status(500).json({
+    const errorResponse = {
       status: false,
       data: [],
       message: `500 Internal Server Error: ${err.message}`
-    });
+    };
+    
+    res.status(500).json(errorResponse);
+    
+    // Log error to database
+    await logApiAccess(req, res, null, err);
   }
 };
 
