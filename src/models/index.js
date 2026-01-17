@@ -16,17 +16,13 @@ const sequelize = new Sequelize(
 import userModel from './userModels.js';
 import provinsiModel from './provinsiModel.js';
 import kabupatenModel from './kabupatenModel.js';
-import apiLogModel from './apiLogModel.js';
-import commentModel from './commentModel.js';
 
 const User = userModel(sequelize, DataTypes);
 const Provinsi = provinsiModel(sequelize, DataTypes);
 const Kabupaten = kabupatenModel(sequelize, DataTypes);
-const ApiLog = apiLogModel(sequelize, DataTypes);
-const Comment = commentModel(sequelize, DataTypes);
 
 // Associations
 Kabupaten.belongsTo(Provinsi, { foreignKey: 'provinsi_wilayah', targetKey: 'wilayah' });
 Provinsi.hasMany(Kabupaten, { foreignKey: 'provinsi_wilayah', sourceKey: 'wilayah' });
 
-export { sequelize, User, Provinsi, Kabupaten, ApiLog, Comment };
+export { sequelize, User, Provinsi, Kabupaten };

@@ -7,10 +7,8 @@
 import cookieParser from 'cookie-parser';
  import wilayahRoutes from './routes/wilayahRoutes.js';
  import authRoutes from './routes/authRoutes.js';
- import commentRoutes from './routes/commentRoutes.js';
  import authMiddleware from './middleware/auth.js';
  import { sequelize } from './models/index.js';
-import { connectRedis } from './utils/redisClient.js';
 
  const app = express();
 
@@ -21,7 +19,6 @@ app.use(cookieParser());
 
  // Public routes
  app.use('/auth', authRoutes);
- app.use('/api/comments', commentRoutes);
  
 //serve frontend pages
 app.get('/', (req, res) => res.redirect('/login'));
@@ -55,5 +52,3 @@ app.listen(PORT, () => {
 sequelize.authenticate()
   .then(() => console.log('DB connected'))
   .catch(err => console.error('DB connection error:', err));
-// Connect to Redis in the background
-connectRedis().catch((err) => console.error('Redis connection error:', err));
