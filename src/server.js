@@ -13,7 +13,12 @@ import cookieParser from 'cookie-parser';
 import { connectRedis } from './utils/redisClient.js';
 
  const app = express();
+ const app = express();
 
+ app.use(express.json());
+app.use(cookieParser());
+ app.set('views', path.join(__dirname, 'views'));
+ app.set('view engine', 'ejs');
  app.use(express.json());
 app.use(cookieParser());
  app.set('views', path.join(__dirname, 'views'));

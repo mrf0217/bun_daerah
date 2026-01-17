@@ -74,8 +74,7 @@ export const login = async (req, res) => {
       maxAge: 60 * 60 * 1000,
       path: '/'
     });
-    
-    const successResponse = {
+    res.json({
       status: true,
       data: { token },
       message: "Login successful"
@@ -137,5 +136,91 @@ export const logout = async (req, res) => {
     
     // Log logout error
     await logApiAccess(req, res, null, err);
+  }
+};
+
+export const logout = async (_req, res) => {
+  try {
+    res.clearCookie('token', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: '/'
+    });
+    res.json({
+      status: true,
+      data: [],
+      message: 'Logged out successfully'
+    });
+    
+  } catch (err) {
+    const errorResponse = {
+      status: false,
+      data: [],
+      message: `500 Internal Server Error: ${err.message}`
+    };
+    
+    res.status(500).json(errorResponse);
+    
+    // Log login error
+    await logApiAccess(req, res, null, err);
+  }
+};
+
+export const logout = async (req, res) => {
+  logApiStart(req);
+  
+  try {
+    res.clearCookie('token', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: '/'
+    });
+    
+    const successResponse = {
+      status: true,
+      data: [],
+      message: 'Logged out successfully'
+    };
+    
+    res.json(successResponse);
+    
+    // Log successful logout
+    await logApiAccess(req, res, { logoutSuccess: true });
+    
+  } catch (err) {
+    const errorResponse = {
+      status: false,
+      data: [],
+      message: `500 Internal Server Error: ${err.message}`
+    };
+    
+    res.status(500).json(errorResponse);
+    
+    // Log logout error
+    await logApiAccess(req, res, null, err);
+  }
+};
+
+export const logout = async (_req, res) => {
+  try {
+    res.clearCookie('token', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: '/'
+    });
+    res.json({
+      status: true,
+      data: [],
+      message: 'Logged out successfully'
+    });
+  } catch (err) {
+    res.status(500).json({
+      status: false,
+      data: [],
+      message: `500 Internal Server Error: ${err.message}`
+    });
   }
 };
