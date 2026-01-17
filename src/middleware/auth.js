@@ -6,7 +6,9 @@ const SECRET = process.env.JWT_SECRET;
 
 export const verifyToken = async (req, res, next) => {
   const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(" ")[1];
+  const bearerToken = authHeader && authHeader.split(" ")[1];
+  const cookieToken = req.cookies && req.cookies.token;
+  const token = cookieToken || bearerToken;
 
   if (!token) {
     return res.status(401).json({
